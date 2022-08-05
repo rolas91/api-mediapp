@@ -81,7 +81,7 @@ export const authenticateUser = async (req, res) => {
   }
 
   if (errors.length > 0) {
-    res.status(500).json({ code: "error", errors });
+    res.status(200).json({ code: "error", errors });
   } else {
     res.status(200).json({
       code: "success",
