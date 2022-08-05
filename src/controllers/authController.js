@@ -11,26 +11,26 @@ export const registerUser = async (req, res) => {
   let { names, lastnames, email, password, phone } = req.body;
   let errors = [];
   if (!names) {
-    errors.push({ code: "error", names: "Please add your names" });
+    errors.push({ code: "error", message: "Please add your names" });
   }
 
   if (!lastnames) {
-    errors.push({ code: "error", lastnames: "Please add your lastnames" });
+    errors.push({ code: "error", message: "Please add your lastnames" });
   }
   if (!email) {
-    errors.push({ code: "error", email: "Please add your email" });
+    errors.push({ code: "error", message: "Please add your email" });
   }
 
   if (!password) {
-    errors.push({ code: "error", password: "Please add your password" });
+    errors.push({ code: "error", message: "Please add your password" });
   }
   if (!phone) {
-    errors.push({ code: "error", phone: "Please add your phone" });
+    errors.push({ code: "error", message: "Please add your phone" });
   }
 
   const user = await User.findOne({ where: { email: email } });
   if (user) {
-    errors.push({ code: "error", userexist: "User allready register" });
+    errors.push({ code: "error", message: "User allready register" });
   }
 
   if (errors.length > 0) {
@@ -62,21 +62,21 @@ export const authenticateUser = async (req, res) => {
   const { email, password } = req.body;
   let errors = [];
   if (!email) {
-    errors.push({ code: errors, email: "Please add your email" });
+    errors.push({ code: errors, message: "Please add your email" });
   }
   if (!password) {
-    errors.push({ code: errors, email: "Please add your password" });
+    errors.push({ code: errors, message: "Please add your password" });
   }
 
   const user = await User.findOne({ email: email });
   if (!user) {
-    errors.push({ code: "error", user: "user does not exist" });
+    errors.push({ code: "error", message: "user does not exist" });
   }
 
   if (user) {
     const comparePass = await compare(password, user.password);
     if (!comparePass) {
-      errors.push({ code: "error", user: "Incorrect password" });
+      errors.push({ code: "error", message: "Incorrect password" });
     }
   }
 
