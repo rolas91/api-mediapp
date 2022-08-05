@@ -8,7 +8,7 @@ import db from "./src/config/conexion.js";
 db.authenticate()
   .then(() => {
     console.log("db connection success");
-    db.sync({ force: true });
+    db.sync({ force: false });
   })
   .catch((error) => console.log(error));
 
