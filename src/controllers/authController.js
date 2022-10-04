@@ -27,6 +27,10 @@ export const registerUser = async (req, res) => {
     errors.push({ code: "error", message: "Please add your names" });
   }
 
+  if (names.split(" ", 4).length < 4) {
+    errors.push({ code: "error", message: "Please complete your names" });
+  }
+
   if (!email) {
     errors.push({ code: "error", message: "Please add your email" });
   }
@@ -61,9 +65,8 @@ export const registerUser = async (req, res) => {
     errors.push({ code: "error", message: "User allready register" });
   }
 
-  const name = `${names.split(" ")[0]} ${names.split(" ")[1]}`;
-  const lastname = `${names.split(" ")[2]} ${names.split(" ")[3]}`;
-
+  const name = `${names.split(" ", 4)[0]} ${names.split(" ", 4)[1]}`;
+  const lastname = `${names.split(" ", 4)[2]} ${names.split(" ", 4)[3]}`;
   if (errors.length > 0) {
     res.status(500).json({ code: "error", errors: errors });
   } else {
