@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 db.authenticate()
   .then(() => {
     console.log("db connection success");
-    db.sync({ force: false });
+    db.sync({ force: true });
   })
   .catch((error) => console.log(error));
 
