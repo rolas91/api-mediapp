@@ -14,7 +14,6 @@ export default db.define("users", {
   dateofbirth: Sequelize.STRING,
   id_number: Sequelize.STRING,
   phone: Sequelize.STRING,
-  identification: Sequelize.STRING,
   countryId: Sequelize.INTEGER,
   cityId: Sequelize.INTEGER,
   roles: Sequelize.STRING,
