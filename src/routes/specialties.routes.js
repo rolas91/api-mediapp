@@ -1,12 +1,9 @@
 import express from "express";
 const router = express.Router();
 
+import { getSpecialties } from "../controllers/specialtiesController.js";
+
 export default function () {
-  router.get("/specialties", (req, res) => {
-    res.status(200).json({
-      code: "success",
-      data: [],
-    });
-  });
+  router.get("/specialties", getSpecialties);
   return router;
 }
