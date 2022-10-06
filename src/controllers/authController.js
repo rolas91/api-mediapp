@@ -1,8 +1,10 @@
 import User from "../models/User.js";
 import UserMedicalData from "../models/UserMedicalData.js";
 import Profile from "../models/Profile.js";
+import DoctorInfo from "../models/DoctorInfo.js";
 import { genSalt, hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
+import { PROFILE_DOCTOR, PROFILE_USER } from "../utils/constants.js";
 
 const createToken = (user, secret, expiresIn) => {
   const { id, email } = user;
@@ -22,6 +24,8 @@ export const registerUser = async (req, res) => {
     height,
     age,
     profile_id,
+    health_code,
+    specialty_id,
   } = req.body;
 
   let errors = [];
@@ -64,6 +68,15 @@ export const registerUser = async (req, res) => {
   if (!age) {
     errors.push({ code: "error", message: "Please add your age" });
   }
+  const profile = await Profile.findOne({ where: { id: profile_id } });
+  if (profile.code === PROFILE_DOCTOR) {
+    if (!health_code) {
+      errors.push({ code: "error", message: "Please add your health code" });
+    }
+    if (!specialty_id.length > 0) {
+      errors.push({ code: "error", message: "Please add your specialities" });
+    }
+  }
 
   const user = await User.findOne({ where: { email: email } });
   if (user) {
@@ -91,13 +104,20 @@ export const registerUser = async (req, res) => {
         height,
         age,
       });
-      await UserMedicalData.create({
-        blood_type,
-        weight,
-        height,
-        age,
-        userId: userSaved.id,
-      });
+      if (profile.code === PROFILE_USER) {
+        await UserMedicalData.create({
+          blood_type,
+          weight,
+          height,
+          age,
+          userId: userSaved.id,
+        });
+      } else if (profile.code === PROFILE_DOCTOR) {
+        await DoctorInfo.create({
+          health_code: health_code,
+          specialty_id: JSON.stringify(specialty_id),
+        });
+      }
 
       if (userSaved) {
         res.status(200).json({
