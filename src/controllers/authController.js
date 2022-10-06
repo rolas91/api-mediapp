@@ -23,13 +23,13 @@ export const registerUser = async (req, res) => {
     weight,
     height,
     age,
-    profile_id,
+    profilecode,
     health_code,
     specialty_id,
   } = req.body;
 
   let errors = [];
-  if (!profile_id) {
+  if (!profilecode) {
     errors.push({ code: "error", message: "Please selected profile" });
   }
   if (!names) {
@@ -56,21 +56,12 @@ export const registerUser = async (req, res) => {
   if (!id_number) {
     errors.push({ code: "error", message: "Please add your ID" });
   }
-  if (!blood_type) {
-    errors.push({ code: "error", message: "Please add your blood type" });
-  }
-  if (!weight) {
-    errors.push({ code: "error", message: "Please add your weight" });
-  }
-  if (!height) {
-    errors.push({ code: "error", message: "Please add your height" });
-  }
   if (!age) {
     errors.push({ code: "error", message: "Please add your age" });
   }
   let profile;
   try {
-    profile = await Profile.findOne({ where: { id: profile_id } });
+    profile = await Profile.findOne({ where: { code: profilecode } });
     if (
       (profile != null || profile != undefined) &&
       profile.code === PROFILE_DOCTOR
@@ -86,6 +77,16 @@ export const registerUser = async (req, res) => {
           code: "error",
           message: "Please add your specialities",
         });
+      }
+    } else {
+      if (!blood_type) {
+        errors.push({ code: "error", message: "Please add your blood type" });
+      }
+      if (!weight) {
+        errors.push({ code: "error", message: "Please add your weight" });
+      }
+      if (!height) {
+        errors.push({ code: "error", message: "Please add your height" });
       }
     }
 
@@ -137,6 +138,7 @@ export const registerUser = async (req, res) => {
         await DoctorInfo.create({
           health_code: health_code,
           specialty_id: JSON.stringify(specialty_id),
+          userId: userSaved.id,
         });
       }
 
