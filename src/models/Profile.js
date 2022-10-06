@@ -1,12 +1,13 @@
 import { Sequelize } from "sequelize";
 import db from "../config/conexion.js";
 
-export default db.define("", {
+export default db.define("profile", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
-  blood_type:Sequelize.STRING,
-  
+  code: Sequelize.STRING,
+  name: Sequelize.STRING,
+  description: Sequelize.STRING,
 });

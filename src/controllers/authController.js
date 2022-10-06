@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import UserMedicalData from "../models/UserMedicalData.js";
+import Profile from "../models/Profile.js";
 import { genSalt, hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -20,9 +21,13 @@ export const registerUser = async (req, res) => {
     weight,
     height,
     age,
+    profile_id,
   } = req.body;
 
   let errors = [];
+  if (!profile_id) {
+    errors.push({ code: "error", message: "Please selected profile" });
+  }
   if (!names) {
     errors.push({ code: "error", message: "Please add your names" });
   }

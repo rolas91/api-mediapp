@@ -6,7 +6,12 @@ const app = express();
 import routes from "./src/routes/index.js";
 import bodyParser from "body-parser";
 import db from "./src/config/conexion.js";
-import { addSpecialties, addCountries, addShops } from "./src/lib/setup.js";
+import {
+  addSpecialties,
+  addCountries,
+  addShops,
+  addProfileCode,
+} from "./src/lib/setup.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,6 +27,7 @@ db.authenticate()
       addSpecialties();
       addCountries();
       addShops();
+      addProfileCode();
     }, 10000);
   });
 
