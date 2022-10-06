@@ -68,19 +68,33 @@ export const registerUser = async (req, res) => {
   if (!age) {
     errors.push({ code: "error", message: "Please add your age" });
   }
-  const profile = await Profile.findOne({ where: { id: profile_id } });
-  if (profile.code === PROFILE_DOCTOR) {
-    if (!health_code) {
-      errors.push({ code: "error", message: "Please add your health code" });
+  let profile;
+  try {
+    profile = await Profile.findOne({ where: { id: profile_id } });
+    if (
+      (profile != null || profile != undefined) &&
+      profile.code === PROFILE_DOCTOR
+    ) {
+      if (!health_code) {
+        errors.push({
+          code: "error",
+          message: "Please add your health code",
+        });
+      }
+      if (!specialty_id.length > 0) {
+        errors.push({
+          code: "error",
+          message: "Please add your specialities",
+        });
+      }
     }
-    if (!specialty_id.length > 0) {
-      errors.push({ code: "error", message: "Please add your specialities" });
-    }
-  }
 
-  const user = await User.findOne({ where: { email: email } });
-  if (user) {
-    errors.push({ code: "error", message: "User allready register" });
+    const user = await User.findOne({ where: { email: email } });
+    if (user) {
+      errors.push({ code: "error", message: "User allready register" });
+    }
+  } catch (error) {
+    res.status(500).json({ code: "error", message: error.message });
   }
 
   const name = `${names.split(" ", 4)[0]} ${names.split(" ", 4)[1]}`;
@@ -104,7 +118,10 @@ export const registerUser = async (req, res) => {
         height,
         age,
       });
-      if (profile.code === PROFILE_USER) {
+      if (
+        (profile != null || profile != undefined) &&
+        profile.code === PROFILE_USER
+      ) {
         await UserMedicalData.create({
           blood_type,
           weight,
@@ -112,7 +129,11 @@ export const registerUser = async (req, res) => {
           age,
           userId: userSaved.id,
         });
-      } else if (profile.code === PROFILE_DOCTOR) {
+      } else if (
+        (profile != null || profile != undefined) &&
+        profile.code === PROFILE_DOCTOR
+      ) {
+        console.log("entro a doc");
         await DoctorInfo.create({
           health_code: health_code,
           specialty_id: JSON.stringify(specialty_id),
@@ -126,7 +147,7 @@ export const registerUser = async (req, res) => {
         });
       }
     } catch (error) {
-      res.status(500).json({ code: "error", error });
+      res.status(500).json({ code: "error", message: error.message });
     }
   }
 };
