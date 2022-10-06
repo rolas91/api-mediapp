@@ -27,7 +27,7 @@ export const registerUser = async (req, res) => {
     health_code,
     specialty_id,
   } = req.body;
-
+  console.log(profilecode);
   let errors = [];
   if (!profilecode) {
     errors.push({ code: "error", message: "Please selected profile" });
