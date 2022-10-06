@@ -95,7 +95,7 @@ export const registerUser = async (req, res) => {
       errors.push({ code: "error", message: "User allready register" });
     }
   } catch (error) {
-    res.status(500).json({ code: "error", message: error.message });
+    res.status(500).json({ code: "error", message: error });
   }
 
   const name = `${names.split(" ", 4)[0]} ${names.split(" ", 4)[1]}`;
