@@ -13,81 +13,77 @@ const createToken = (user, secret, expiresIn) => {
 
 export const registerUser = async (req, res) => {
   let {
-    names,
-    email,
-    password,
-    phone,
-    birthday,
-    id_number,
-    blood_type,
-    weight,
-    height,
-    age,
-    profilecode,
-    health_code,
-    specialty_id,
+    names = "",
+    email = "",
+    password = "",
+    phone = "",
+    birthday = "",
+    id_number = "",
+    blood_type = "",
+    weight = "",
+    height = "",
+    age = "",
+    profilecode = "",
+    health_code = "",
+    specialty_id = "",
   } = req.body;
 
   const name = `${names.split(" ", 4)[0]} ${names.split(" ", 4)[1]}`;
   const lastname = `${names.split(" ", 4)[2]} ${names.split(" ", 4)[3]}`;
-  if (errors.length > 0) {
-    res.status(500).json({ code: "error", errors: errors });
-  } else {
-    try {
-      const profile = await Profile.findOne({ where: { code: profilecode } });
-      const user = await User.findOne({ where: { email: email } });
-      if (user) {
-        res
-          .status(500)
-          .json({ code: "error", message: "User allready register" });
-      }
+  try {
+    const profile = await Profile.findOne({ where: { code: profilecode } });
+    const user = await User.findOne({ where: { email: email } });
+    if (user) {
+      res
+        .status(500)
+        .json({ code: "error", message: "User allready register" });
+    }
 
-      const salt = await genSalt(10);
-      password = await hash(password, salt);
-      const userSaved = await User.create({
-        names: name,
-        lastnames: lastname,
-        email,
-        password,
-        phone,
-        dateofbirth: birthday,
-        id_number,
+    const salt = await genSalt(10);
+    password = await hash(password, salt);
+    const userSaved = await User.create({
+      names: name,
+      lastnames: lastname,
+      email,
+      password,
+      phone,
+      dateofbirth: birthday,
+      id_number,
+      blood_type,
+      weight,
+      height,
+      age,
+    });
+    if (
+      (profile != null || profile != undefined) &&
+      profile.code === PROFILE_USER
+    ) {
+      await UserMedicalData.create({
         blood_type,
         weight,
         height,
         age,
+        userId: userSaved.id,
       });
-      if (
-        (profile != null || profile != undefined) &&
-        profile.code === PROFILE_USER
-      ) {
-        await UserMedicalData.create({
-          blood_type,
-          weight,
-          height,
-          age,
-          userId: userSaved.id,
-        });
-      } else if (
-        (profile != null || profile != undefined) &&
-        profile.code === PROFILE_DOCTOR
-      ) {
-        await DoctorInfo.create({
-          health_code: health_code,
-          specialty_id: JSON.stringify(specialty_id),
-          userId: userSaved.id,
-        });
-      }
-
-      if (userSaved) {
-        res.status(200).json({
-          code: "success",
-          user: { names: userSaved.names, lastname: userSaved.lastnames },
-        });
-      }
-    } catch (error) {
-      res.status(500).json({ code: "error", message: error.message });
+    } else if (
+      (profile != null || profile != undefined) &&
+      profile.code === PROFILE_DOCTOR
+    ) {
+      await DoctorInfo.create({
+        health_code: health_code,
+        specialty_id: JSON.stringify(specialty_id),
+        userId: userSaved.id,
+      });
     }
+
+    if (userSaved) {
+      res.status(200).json({
+        code: "success",
+        user: { names: userSaved.names, lastname: userSaved.lastnames },
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ code: "error", message: error.message });
   }
 };
 
