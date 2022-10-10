@@ -3,7 +3,7 @@ import City from "../models/City.js";
 export const getCities = async (req, res, next) => {
   try {
     const response = await City.findAll({
-      where: { countryId: req.params.country_id },
+      where: { countryId: req.query.country_id },
     });
     res.status(200).json({ code: "success", cities: response });
   } catch (error) {
