@@ -2,10 +2,12 @@ import Specialties from "../models/Specialties.js";
 import Countries from "../models/Country.js";
 import Shops from "../models/Shops.js";
 import Profile from "../models/Profile.js";
+import Cities from "../models/City.js";
 import SpecialtiesData from "../utils/specialties.js";
 import CountriesData from "../utils/countries.js";
 import ShopsData from "../utils/shops.js";
 import ProfileData from "../utils/profile.js";
+import CitiesData from "../utils/cities.js";
 
 export const addProfileCode = async () => {
   try {
@@ -38,10 +40,18 @@ export const addSpecialties = () => {
 export const addCountries = () => {
   try {
     CountriesData.forEach(async (data) => {
-      await Countries.create({
+      const country_added = await Countries.create({
         country: data.country,
         code: data.code,
         iso: data.iso,
+      });
+      CitiesData.forEach(async (data) => {
+        if (country_added.country === data.country) {
+          await Cities.create({
+            city: data.city,
+            countryId: country_added.id,
+          });
+        }
       });
     });
   } catch (error) {

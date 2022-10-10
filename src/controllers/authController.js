@@ -27,7 +27,7 @@ export const registerUser = async (req, res) => {
     health_code = "",
     specialty_id = "",
   } = req.body;
-
+  console.log(req.body);
   const name = `${names.split(" ", 4)[0]} ${names.split(" ", 4)[1]}`;
   const lastname = `${names.split(" ", 4)[2]} ${names.split(" ", 4)[3]}`;
   try {
