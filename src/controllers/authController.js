@@ -55,8 +55,8 @@ export const registerUser = async (req, res) => {
       weight,
       height,
       age,
-      country_id,
-      city_id,
+      countryId: country_id,
+      cityId: city_id,
     });
     if (
       (profile != null || profile != undefined) &&
