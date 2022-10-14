@@ -75,7 +75,13 @@ export const getDoctorBySpecialitiesId = async (req, res) => {
       )
     res.status(200).json({
       code: "success",
-      data: result,
+      data: result.map((item) => {
+        item.picture === null
+          ? (item.picture =
+              "https://mediapp.up.railway.app/static/doctors/1.jpg")
+          : item.picture
+        return item
+      }),
     })
   } catch (error) {
     console.log(error)
