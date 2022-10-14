@@ -1,13 +1,13 @@
-import Specialties from "../models/Specialties.js";
-import Countries from "../models/Country.js";
-import Shops from "../models/Shops.js";
-import Profile from "../models/Profile.js";
-import Cities from "../models/City.js";
-import SpecialtiesData from "../utils/specialties.js";
-import CountriesData from "../utils/countries.js";
-import ShopsData from "../utils/shops.js";
-import ProfileData from "../utils/profile.js";
-import CitiesData from "../utils/cities.js";
+import Specialties from "../database/models/Specialties.js"
+import Countries from "../database/models/Country.js"
+import Shops from "../database/models/Shops.js"
+import Profile from "../database/models/Profile.js"
+import Cities from "../database/models/City.js"
+import SpecialtiesData from "../utils/specialties.js"
+import CountriesData from "../utils/countries.js"
+import ShopsData from "../utils/shops.js"
+import ProfileData from "../utils/profile.js"
+import CitiesData from "../utils/cities.js"
 
 export const addProfileCode = async () => {
   try {
@@ -16,12 +16,12 @@ export const addProfileCode = async () => {
         code: data.code,
         name: data.name,
         description: data.description,
-      });
-    });
+      })
+    })
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 export const addSpecialties = () => {
   try {
@@ -30,12 +30,12 @@ export const addSpecialties = () => {
         id: data.id,
         name: data.name,
         image: data.image,
-      });
-    });
+      })
+    })
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 export const addCountries = () => {
   try {
@@ -44,20 +44,20 @@ export const addCountries = () => {
         country: data.country,
         code: data.code,
         iso: data.iso,
-      });
+      })
       CitiesData.forEach(async (data) => {
         if (country_added.country === data.country) {
           await Cities.create({
             city: data.city,
             countryId: country_added.id,
-          });
+          })
         }
-      });
-    });
+      })
+    })
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 export const addShops = () => {
   try {
@@ -65,9 +65,9 @@ export const addShops = () => {
       await Shops.create({
         name: data.name,
         image: data.image,
-      });
-    });
+      })
+    })
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
