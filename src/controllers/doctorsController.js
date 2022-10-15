@@ -2,6 +2,7 @@ import User from "../database/models/User.js"
 import DoctorInfo from "../database/models/DoctorInfo.js"
 import Country from "../database/models/Country.js"
 import City from "../database/models/City.js"
+import Specialties from "../database/models/Specialties.js"
 
 export const getDoctors = async (req, res) => {
   try {
@@ -10,7 +11,7 @@ export const getDoctors = async (req, res) => {
         {
           model: DoctorInfo,
           as: "isDoctor",
-          attributes: ["health_code", "specialty_id"],
+          attributes: ["health_code", "specialty_id", "bio"],
         },
         { model: Country, attributes: ["country", "code"] },
         { model: City, as: "city", attributes: ["city"] },
@@ -37,6 +38,7 @@ export const getDoctors = async (req, res) => {
 
 export const getDoctorBySpecialitiesId = async (req, res) => {
   try {
+    let specialties = []
     const users = await User.findAll({
       include: [
         {
@@ -57,6 +59,16 @@ export const getDoctorBySpecialitiesId = async (req, res) => {
         "picture",
       ],
     })
+    const [getSpecialties] = await users.map((user) =>
+      JSON.parse(user.isDoctor.specialty_id)
+    )
+    console.log(getSpecialties)
+    for (let i = 0; i < getSpecialties.length; i++) {
+      const { name } = await Specialties.findOne({
+        where: { id: getSpecialties[i] },
+      })
+      specialties.push(name)
+    }
     const result = users
       .map((user) => user)
       .filter((item) =>
@@ -66,13 +78,16 @@ export const getDoctorBySpecialitiesId = async (req, res) => {
       )
     res.status(200).json({
       code: "success",
-      data: result.map((item) => {
-        item.picture === null
-          ? (item.picture =
-              "https://mediapp.up.railway.app/static/doctors/1.jpg")
-          : item.picture
-        return item
-      }),
+      data: [
+        ...result.map((item) => {
+          item.picture === null
+            ? (item.picture =
+                "https://mediapp.up.railway.app/static/doctors/1.jpg")
+            : item.picture
+          item.isDoctor.dataValues["specialties"] = specialties
+          return item
+        }),
+      ],
     })
   } catch (error) {
     console.log(error)
