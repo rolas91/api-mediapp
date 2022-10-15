@@ -9,5 +9,6 @@ export default db.define("doctor_data", {
   },
   health_code: Sequelize.STRING,
   specialty_id: Sequelize.STRING,
+  bio: Sequelize.STRING,
   userId: Sequelize.INTEGER,
 })

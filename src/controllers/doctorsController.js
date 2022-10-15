@@ -37,21 +37,12 @@ export const getDoctors = async (req, res) => {
 
 export const getDoctorBySpecialitiesId = async (req, res) => {
   try {
-    // const data = [
-    //   {
-    //     id: 1,
-    //     name: "Fidel Guzman Sevilla",
-    //     specialities_id: [1, 2, 3],
-    //     descriptiom: "Medico General & Ginecologia con 20 años de experiencia",
-    //     image: `${process.env.URL}/static/doctors/1.jpg`,
-    //   },
-    // ]
     const users = await User.findAll({
       include: [
         {
           model: DoctorInfo,
           as: "isDoctor",
-          attributes: ["health_code", "specialty_id"],
+          attributes: ["health_code", "specialty_id", "bio"],
         },
         { model: Country, attributes: ["country", "code"] },
         { model: City, as: "city", attributes: ["city"] },
