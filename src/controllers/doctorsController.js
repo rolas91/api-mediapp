@@ -59,15 +59,25 @@ export const getDoctorBySpecialitiesId = async (req, res) => {
         "picture",
       ],
     })
-    const [getSpecialties] = await users.map((user) =>
-      JSON.parse(user.isDoctor.specialty_id)
-    )
-    console.log(getSpecialties)
-    for (let i = 0; i < getSpecialties.length; i++) {
-      const { name } = await Specialties.findOne({
-        where: { id: getSpecialties[i] },
-      })
-      specialties.push(name)
+    // const [getSpecialties] = await users.map((user) =>
+    //   JSON.parse(user.isDoctor.specialty_id)
+    // )
+
+    for (let i = 0; i < users.length; i++) {
+      let specialtiesArray = new Array()
+      for (
+        let j = 0;
+        j < JSON.parse(users[i].isDoctor.specialty_id).length;
+        j++
+      ) {
+        const { id, name } = await Specialties.findOne({
+          where: { id: JSON.parse(users[i].isDoctor.specialty_id)[j] },
+        })
+        if (JSON.parse(users[i].isDoctor.specialty_id)[j] === id) {
+          specialtiesArray.push(name)
+          users[i].isDoctor.dataValues["specialties"] = specialtiesArray
+        }
+      }
     }
     const result = users
       .map((user) => user)
@@ -84,7 +94,7 @@ export const getDoctorBySpecialitiesId = async (req, res) => {
             ? (item.picture =
                 "https://mediapp.up.railway.app/static/doctors/1.jpg")
             : item.picture
-          item.isDoctor.dataValues["specialties"] = specialties
+          // item.isDoctor.dataValues["specialties"] = specialties
           return item
         }),
       ],
