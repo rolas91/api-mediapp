@@ -110,12 +110,23 @@ export const authenticateUser = async (req, res) => {
       errors.push({ code: "error", message: "Incorrect password" })
     }
   }
-
   if (errors.length > 0) {
     res.status(200).json({ code: "error", errors })
   } else {
     res.status(200).json({
       code: "success",
+      user: Object.keys(user.dataValues)
+        .map((item) => {
+          if (item === "password") {
+            user[item] = ""
+            return user
+          }
+        })
+        .filter((item) => {
+          if (item != null) {
+            return item
+          }
+        })[0],
       token: createToken(user, process.env.SECRET, "4hr"),
     })
   }
