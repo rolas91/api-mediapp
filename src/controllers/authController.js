@@ -119,8 +119,13 @@ export const authenticateUser = async (req, res) => {
         .map((item) => {
           if (item === "password") {
             user[item] = ""
-            return user
           }
+          if (item === "picture") {
+            if (user[item] === null) {
+              user[item] = "https://mediapp.up.railway.app/static/doctors/1.jpg"
+            }
+          }
+          return user
         })
         .filter((item) => {
           if (item != null) {
