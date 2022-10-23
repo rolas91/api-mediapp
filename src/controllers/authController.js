@@ -3,6 +3,7 @@ import UserMedicalData from "../database/models/UserMedicalData.js"
 import DoctorInfo from "../database/models/DoctorInfo.js"
 import City from "../database/models/City.js"
 import Country from "../database/models/Country.js"
+import Specialties from "../database/models/Specialties.js"
 import { genSalt, hash, compare } from "bcrypt"
 import { generatedJWT } from "../helpers/jwt.js"
 import { PROFILE_DOCTOR, PROFILE_USER } from "../utils/constants.js"
@@ -114,7 +115,18 @@ export const registerUser = async (req, res) => {
 export const authenticateUser = async (req, res) => {
   try {
     const { email, password } = req.body
-    const user = await User.findOne({ email: email })
+    const user = await User.findOne({
+      where: { email: email },
+      include: [
+        {
+          model: DoctorInfo,
+          as: "isDoctor",
+          attributes: ["health_code", "specialty_id", "bio"],
+        },
+        { model: Country, attributes: ["id", "country", "code"] },
+        { model: City, as: "city", attributes: ["id", "city"] },
+      ],
+    })
     if (!user) {
       return res
         .status(400)
@@ -127,12 +139,35 @@ export const authenticateUser = async (req, res) => {
         .status(400)
         .json({ code: "error", message: "Incorrect password" })
     }
+
+    const itemsUser = Object.keys(user.dataValues)
+    for (let i = 0; i < itemsUser.length; i++) {
+      let specialtiesArray = new Array()
+      if (itemsUser[i] === "isDoctor") {
+        if (user[itemsUser[i]] != null) {
+          for (
+            let j = 0;
+            j < JSON.parse(user[itemsUser[i]].specialty_id).length;
+            j++
+          ) {
+            const { id, name } = await Specialties.findOne({
+              where: { id: JSON.parse(user[itemsUser[i]].specialty_id)[j] },
+            })
+            if (JSON.parse(user[itemsUser[i]].specialty_id)[j] === id) {
+              specialtiesArray.push(name)
+              user[itemsUser[i]].dataValues["specialties"] = specialtiesArray
+            }
+          }
+        }
+      }
+    }
+    // console.log("jaja", user)
     res.status(200).json({
       code: "success",
       user: Object.keys(user.dataValues)
-        .map((item, index) => {
+        .map((item) => {
           if (item == "password") {
-            user.splice(0, index)
+            delete user.dataValues[item]
           }
           if (item === "picture") {
             if (user[item] === null) {
@@ -148,7 +183,8 @@ export const authenticateUser = async (req, res) => {
         })[0],
       token: await generatedJWT(user),
     })
-  } catch (error) {
-    res.status(500).json({ code: "error", message: error })
+  } catch (e) {
+    console.log(e)
+    res.status(500).json({ code: "error", message: e })
   }
 }
