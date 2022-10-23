@@ -2,13 +2,8 @@ import User from "../database/models/User.js"
 import UserMedicalData from "../database/models/UserMedicalData.js"
 import DoctorInfo from "../database/models/DoctorInfo.js"
 import { genSalt, hash, compare } from "bcrypt"
-import jwt from "jsonwebtoken"
+import { generatedJWT } from "../helpers/jwt.js"
 import { PROFILE_DOCTOR, PROFILE_USER } from "../utils/constants.js"
-
-const createToken = (user, secret, expiresIn) => {
-  const { id, email } = user
-  return jwt.sign({ id, email }, secret, { expiresIn })
-}
 
 export const registerDoctor = async (req, res) => {
   try {
@@ -50,9 +45,10 @@ export const registerDoctor = async (req, res) => {
       specialty_id: JSON.stringify(specialty_id),
       userId: userSaved.id,
     })
-    res.status(200).json({
+    res.status(201).json({
       code: "success",
       user: { names: userSaved.names, lastname: userSaved.lastnames },
+      token: await generatedJWT(userSaved),
     })
   } catch (error) {
     res.status(500).json({ code: "error", message: error.message })
@@ -105,9 +101,10 @@ export const registerUser = async (req, res) => {
       age,
       userId: userSaved.id,
     })
-    res.status(200).json({
+    res.status(201).json({
       code: "success",
       user: { names: userSaved.names, lastname: userSaved.lastnames },
+      token: await generatedJWT(userSaved),
     })
   } catch (error) {
     res.status(500).json({ code: "error", message: error.message })
@@ -149,7 +146,7 @@ export const authenticateUser = async (req, res) => {
             return item
           }
         })[0],
-      token: createToken(user, process.env.SECRET, "4hr"),
+      token: await generatedJWT(user),
     })
   } catch (error) {
     res.status(500).json({ code: "error", message: error })
