@@ -130,9 +130,9 @@ export const authenticateUser = async (req, res) => {
     res.status(200).json({
       code: "success",
       user: Object.keys(user.dataValues)
-        .map((item) => {
+        .map((item, index) => {
           if (item == "password") {
-            delete user[item]
+            user.splice(0, index)
           }
           if (item === "picture") {
             if (user[item] === null) {
