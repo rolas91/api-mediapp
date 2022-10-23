@@ -1,6 +1,5 @@
 import User from "../database/models/User.js"
 import UserMedicalData from "../database/models/UserMedicalData.js"
-import Profile from "../database/models/Profile.js"
 import DoctorInfo from "../database/models/DoctorInfo.js"
 import { genSalt, hash, compare } from "bcrypt"
 import jwt from "jsonwebtoken"
@@ -11,7 +10,7 @@ const createToken = (user, secret, expiresIn) => {
   return jwt.sign({ id, email }, secret, { expiresIn })
 }
 
-export const registerDoctor = async () => {
+export const registerDoctor = async (req, res) => {
   try {
     let {
       names = "",
@@ -25,46 +24,39 @@ export const registerDoctor = async () => {
       country_id = "",
       city_id = "",
     } = req.body
-
     const name = `${names.split(" ", 4)[0]} ${names.split(" ", 4)[1]}`
     const lastname = `${names.split(" ", 4)[2]} ${names.split(" ", 4)[3]}`
-    try {
-      const user = await User.findOne({ where: { email: email } })
-      if (user) {
-        res
-          .status(500)
-          .json({ code: "error", message: "User allready register" })
-      }
-
-      const salt = await genSalt(10)
-      password = await hash(password, salt)
-      const userSaved = await User.create({
-        names: name,
-        lastnames: lastname,
-        email,
-        password,
-        phone,
-        dateofbirth: birthday,
-        id_number,
-        countryId: country_id,
-        cityId: city_id,
-      })
-      await DoctorInfo.create({
-        health_code: health_code,
-        specialty_id: JSON.stringify(specialty_id),
-        userId: userSaved.id,
-      })
-
-      if (userSaved) {
-        res.status(200).json({
-          code: "success",
-          user: { names: userSaved.names, lastname: userSaved.lastnames },
-        })
-      }
-    } catch (error) {
-      res.status(500).json({ code: "error", message: error.message })
+    const user = await User.findOne({ where: { email: email } })
+    if (user) {
+      return res
+        .status(400)
+        .json({ code: "error", message: "User allready register" })
     }
-  } catch (error) {}
+    const salt = await genSalt(10)
+    password = await hash(password, salt)
+    const userSaved = await User.create({
+      names: name,
+      lastnames: lastname,
+      email,
+      password,
+      phone,
+      dateofbirth: birthday,
+      id_number,
+      countryId: country_id,
+      cityId: city_id,
+    })
+    await DoctorInfo.create({
+      health_code: health_code,
+      specialty_id: JSON.stringify(specialty_id),
+      userId: userSaved.id,
+    })
+    res.status(200).json({
+      code: "success",
+      user: { names: userSaved.names, lastname: userSaved.lastnames },
+    })
+  } catch (error) {
+    res.status(500).json({ code: "error", message: error.message })
+  }
 }
 
 export const registerUser = async (req, res) => {
@@ -88,7 +80,9 @@ export const registerUser = async (req, res) => {
   try {
     const user = await User.findOne({ where: { email: email } })
     if (user) {
-      res.status(500).json({ code: "error", message: "User allready register" })
+      return res
+        .status(400)
+        .json({ code: "error", message: "User allready register" })
     }
 
     const salt = await genSalt(10)
@@ -111,41 +105,31 @@ export const registerUser = async (req, res) => {
       age,
       userId: userSaved.id,
     })
-    if (userSaved) {
-      res.status(200).json({
-        code: "success",
-        user: { names: userSaved.names, lastname: userSaved.lastnames },
-      })
-    }
+    res.status(200).json({
+      code: "success",
+      user: { names: userSaved.names, lastname: userSaved.lastnames },
+    })
   } catch (error) {
     res.status(500).json({ code: "error", message: error.message })
   }
 }
 
 export const authenticateUser = async (req, res) => {
-  const { email, password } = req.body
-  let errors = []
-  if (!email) {
-    errors.push({ code: errors, message: "Please add your email" })
-  }
-  if (!password) {
-    errors.push({ code: errors, message: "Please add your password" })
-  }
+  try {
+    const { email, password } = req.body
+    const user = await User.findOne({ email: email })
+    if (!user) {
+      return res
+        .status(400)
+        .json({ code: "error", message: "user does not exist" })
+    }
 
-  const user = await User.findOne({ email: email })
-  if (!user) {
-    errors.push({ code: "error", message: "user does not exist" })
-  }
-
-  if (user) {
     const comparePass = await compare(password, user.password)
     if (!comparePass) {
-      errors.push({ code: "error", message: "Incorrect password" })
+      return res
+        .status(400)
+        .json({ code: "error", message: "Incorrect password" })
     }
-  }
-  if (errors.length > 0) {
-    res.status(200).json({ code: "error", errors })
-  } else {
     res.status(200).json({
       code: "success",
       user: Object.keys(user.dataValues)
@@ -167,5 +151,7 @@ export const authenticateUser = async (req, res) => {
         })[0],
       token: createToken(user, process.env.SECRET, "4hr"),
     })
+  } catch (error) {
+    res.status(500).json({ code: "error", message: error })
   }
 }
