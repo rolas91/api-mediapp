@@ -1,6 +1,8 @@
 import User from "../database/models/User.js"
 import UserMedicalData from "../database/models/UserMedicalData.js"
 import DoctorInfo from "../database/models/DoctorInfo.js"
+import City from "../database/models/City.js"
+import Country from "../database/models/Country"
 import { genSalt, hash, compare } from "bcrypt"
 import { generatedJWT } from "../helpers/jwt.js"
 import { PROFILE_DOCTOR, PROFILE_USER } from "../utils/constants.js"
@@ -132,7 +134,7 @@ export const authenticateUser = async (req, res) => {
       user: Object.keys(user.dataValues)
         .map((item) => {
           if (item === "password") {
-            user[item] = ""
+            delete user[item]
           }
           if (item === "picture") {
             if (user[item] === null) {
