@@ -50,7 +50,6 @@ export const registerDoctor = async (req, res) => {
     res.status(201).json({
       code: "success",
       user: { names: userSaved.names, lastname: userSaved.lastnames },
-      token: await generatedJWT(userSaved),
     })
   } catch (error) {
     res.status(500).json({ code: "error", message: error.message })
@@ -106,7 +105,6 @@ export const registerUser = async (req, res) => {
     res.status(201).json({
       code: "success",
       user: { names: userSaved.names, lastname: userSaved.lastnames },
-      token: await generatedJWT(userSaved),
     })
   } catch (error) {
     res.status(500).json({ code: "error", message: error.message })
@@ -133,7 +131,7 @@ export const authenticateUser = async (req, res) => {
       code: "success",
       user: Object.keys(user.dataValues)
         .map((item) => {
-          if (item === "password") {
+          if (item == "password") {
             delete user[item]
           }
           if (item === "picture") {
