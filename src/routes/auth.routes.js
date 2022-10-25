@@ -2,11 +2,13 @@ import express from "express"
 const router = express.Router()
 import { check } from "express-validator"
 import { validateFields } from "../middlewares/field-validators.js"
+import { validatedJWT } from "../middlewares/jwt-validator.js"
 
 import {
   authenticateUser,
   registerUser,
   registerDoctor,
+  refreshToken,
 } from "../controllers/authController.js"
 
 export default function () {
@@ -61,6 +63,8 @@ export default function () {
     ],
     authenticateUser
   )
+
+  router.get("/refresh-token", validatedJWT, refreshToken)
 
   return router
 }

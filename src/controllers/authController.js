@@ -181,10 +181,18 @@ export const authenticateUser = async (req, res) => {
             return item
           }
         })[0],
-      token: await generatedJWT(user),
+      token: await generatedJWT(user.id, user.email),
     })
   } catch (e) {
     console.log(e)
     res.status(500).json({ code: "error", message: e })
   }
+}
+
+export const refreshToken = async (req, res) => {
+  const id = req.userid
+  const email = req.email
+  res
+    .status(200)
+    .json({ code: "success", token: await generatedJWT(id, email) })
 }
