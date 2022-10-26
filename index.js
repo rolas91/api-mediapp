@@ -2,6 +2,7 @@ import express from "express"
 import path from "path"
 import { fileURLToPath } from "url"
 import "dotenv/config"
+import cors from "cors"
 const app = express()
 import routes from "./src/routes/index.js"
 import bodyParser from "body-parser"
@@ -18,6 +19,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 //middleware
+app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use("/static", express.static(path.join(__dirname, "/public")))
