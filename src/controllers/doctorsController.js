@@ -65,27 +65,35 @@ export const getDoctorBySpecialitiesId = async (req, res) => {
 
     for (let i = 0; i < users.length; i++) {
       let specialtiesArray = new Array()
-      for (
-        let j = 0;
-        j < JSON.parse(users[i].isDoctor.specialty_id).length;
-        j++
-      ) {
-        const { id, name } = await Specialties.findOne({
-          where: { id: JSON.parse(users[i].isDoctor.specialty_id)[j] },
-        })
-        if (JSON.parse(users[i].isDoctor.specialty_id)[j] === id) {
-          specialtiesArray.push(name)
-          users[i].isDoctor.dataValues["specialties"] = specialtiesArray
+      if (users[i].isDoctor?.specialty_id != null) {
+        for (
+          let j = 0;
+          j < JSON.parse(users[i].isDoctor.specialty_id).length;
+          j++
+        ) {
+          const { id, name } = await Specialties.findOne({
+            where: { id: JSON.parse(users[i].isDoctor.specialty_id)[j] },
+          })
+          if (JSON.parse(users[i].isDoctor.specialty_id)[j] === id) {
+            specialtiesArray.push(name)
+            users[i].isDoctor.dataValues["specialties"] = specialtiesArray
+          }
         }
       }
     }
     const result = users
       .map((user) => user)
-      .filter((item) =>
-        JSON.parse(item.isDoctor.specialty_id).includes(
-          Number(req.params.specialty_id)
-        )
-      )
+      .filter((item) => {
+        if (item.isDoctor !== null) {
+          if (
+            JSON.parse(item.isDoctor.specialty_id).includes(
+              Number(req.params.specialty_id)
+            )
+          ) {
+            return item
+          }
+        }
+      })
     res.status(200).json({
       code: "success",
       data: [
