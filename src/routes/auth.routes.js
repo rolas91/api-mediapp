@@ -19,7 +19,9 @@ export default function () {
       check("email", "El correo es obligatorio").isEmail(),
       check("password", "La contraseña es obligatoria").isLength({ min: 6 }),
       check("phone", "El número de teléfono es obligatorio").isNumeric(),
-      check("birthday", "La fecha de su cumpleaños es obligatoria").isDate(),
+      check("birthday", "La fecha de su cumpleaños es obligatoria")
+        .not()
+        .isEmpty(),
       check("id_number", "Su cédula es obligatoria").not().isEmpty(),
       check("blood_type", "Su tipo de sangre es obligatorio").not().isEmpty(),
       check("weight", "Debe agregar su peso corporal").not().isEmpty(),
@@ -41,7 +43,9 @@ export default function () {
       check("email", "El correo es obligatorio").isEmail(),
       check("password", "La contraseña es obligatoria").isLength({ min: 6 }),
       check("phone", "El número de teléfono es obligatorio").not().isEmpty(),
-      check("birthday", "La fecha de su cumpleaños es obligatoria").isDate(),
+      check("birthday", "La fecha de su cumpleaños es obligatoria")
+        .not()
+        .isEmpty(),
       check("id_number", "Su cédula es obligatoria").not().isEmpty(),
       check("health_code", "Agrege su código sanitario").not().isEmpty(),
       check("specialty_id", "Seleccione su especialidad").isNumeric(),

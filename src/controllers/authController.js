@@ -9,6 +9,7 @@ import { generatedJWT } from "../helpers/jwt.js"
 import { PROFILE_DOCTOR, PROFILE_USER } from "../utils/constants.js"
 
 export const registerDoctor = async (req, res) => {
+  console.log("from controller", req.body)
   try {
     let {
       names = "",

@@ -19,7 +19,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 //middleware
-app.use(cors({ origin: "*" }))
+app.use(cors({ origin: "*", credentials: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use("/static", express.static(path.join(__dirname, "/public")))
