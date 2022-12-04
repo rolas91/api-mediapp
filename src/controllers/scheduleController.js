@@ -14,19 +14,8 @@ export const addUserSchedule = async(req, res, next) => {
                   model: DoctorInfo,
                   as: "isDoctor",
                   attributes: ["health_code", "specialty_id", "bio"],
-                },
-                { model: Country, attributes: ["country", "code"] },
-                { model: City, as: "city", attributes: ["city"] },
-              ],
-              attributes: [
-                "id",
-                "names",
-                "lastnames",
-                "email",
-                "id_number",
-                "phone",
-                "picture",
-              ],
+                }
+              ]
         })
        
         res.status(200).json({code:"success", data:result})
