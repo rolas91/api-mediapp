@@ -43,6 +43,7 @@ export const getDoctorScheduleByDay = async(req, res, next) => {
                 }
             ]
         })
+        console.log('respuesta',schedule)
         res.status(200).json({code:"success", schedule})
     } catch (error) {
         console.log(error)
