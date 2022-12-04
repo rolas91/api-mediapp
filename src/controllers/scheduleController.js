@@ -2,6 +2,8 @@ import Schedule from '../database/models/Schedule.js'
 import User from '../database/models/User.js'
 import DoctorInfo from "../database/models/DoctorInfo.js"
 import Days from '../database/models/Days.js'
+import Country from '../database/models/Country.js'
+import City from '../database/models/City.js'
 
 export const addUserSchedule = async(req, res, next) => {
     try {
