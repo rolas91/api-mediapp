@@ -13,6 +13,7 @@ import {
   addCountries,
   addShops,
   addProfileCode,
+  addDays
 } from "./src/lib/setup.js"
 
 const __filename = fileURLToPath(import.meta.url)
@@ -43,6 +44,7 @@ app.listen(process.env.PORT || 3000, () => {
         addCountries()
         addShops()
         addProfileCode()
+        addDays()
       }, 10000)
     })
 })

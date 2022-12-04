@@ -3,11 +3,25 @@ import Countries from "../database/models/Country.js"
 import Shops from "../database/models/Shops.js"
 import Profile from "../database/models/Profile.js"
 import Cities from "../database/models/City.js"
+import Days from "../database/models/Days.js"
 import SpecialtiesData from "../utils/specialties.js"
 import CountriesData from "../utils/countries.js"
 import ShopsData from "../utils/shops.js"
 import ProfileData from "../utils/profile.js"
 import CitiesData from "../utils/cities.js"
+import DaysData from "../utils/days.js"
+
+export const addDays = async () => {
+  try {
+    DaysData.forEach(async(data) => {
+      await Days.create({
+        day:data.day
+      })
+    })
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 export const addProfileCode = async () => {
   try {

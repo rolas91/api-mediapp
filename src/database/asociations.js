@@ -6,6 +6,8 @@ import Specialties from "./models/Specialties.js"
 import User from "./models/User.js"
 import UserMedicalData from "./models/UserMedicalData.js"
 import Shops from "./models/Shops.js"
+import Days from "./models/days.js"
+import Schedule from "./models/schedule.js"
 
 export default function () {
   User.hasOne(DoctorInfo, {
@@ -20,4 +22,10 @@ export default function () {
 
   User.belongsTo(City, { foreignKey: "cityId", onDelete: "cascade" })
   City.hasMany(User, { foreignKey: "cityId" })
+
+  Schedule.belongsTo(Days, {foreignKey:"dayId", onDelete:"cascade"})
+  Days.hasMany(Schedule, {foreignKey:"dayId"})
+  
+  Schedule.belongsTo(User, {foreignKey:"userId", onDelete:"cascade"})
+  User.hasMany(Schedule, {foreignKey:"userId"})
 }
