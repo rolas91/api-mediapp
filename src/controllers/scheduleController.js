@@ -29,3 +29,21 @@ export const addUserSchedule = async(req, res, next) => {
         console.log(error)
     }
 }
+
+export const getDoctorScheduleByDay = async(req, res, next) => {
+    try {
+        const schedule = await Schedule.findAll({
+            where:{userId:req.userid}, 
+            include:[
+                {
+                    model:Days,
+                    as:"day",
+                    where:{day:req.params.day}
+                }
+            ]
+        })
+        res.status(200).json({code:"success", schedule})
+    } catch (error) {
+        console.log(error)
+    }
+}
