@@ -7,7 +7,7 @@ import City from '../database/models/City.js'
 
 export const addUserSchedule = async(req, res, next) => {
     try {
-        const result = await User.findOne({
+        const user = await User.findOne({
             where:{id:req.userid},
             include: [
                 {
@@ -18,9 +18,11 @@ export const addUserSchedule = async(req, res, next) => {
             ],
             attributes: ["id","isDoctor"],
         });
-        if(!result.isDoctor){
+        if(!user.isDoctor){
             return  res.status(200).json({code:"error", message:"unauthorized transaction"})
         }
+
+        const day = await User.findOne({where:{}})
        
         res.status(200).json({code:"success", data:result})
     } catch (error) {

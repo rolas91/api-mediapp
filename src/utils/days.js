@@ -1,9 +1,9 @@
 export default [
-    {day:"Lunes"},
-    {day:"Martes"},
-    {day:"Miercoles"},
-    {day:"Jueves"},
-    {day:"Viernes"},
-    {day:"Sábado"},
-    {day:"Domingo"}
+    {day:"Monday"},
+    {day:"Tuesday"},
+    {day:"Wednesday"},
+    {day:"Thursday"},
+    {day:"Friday"},
+    {day:"Saturday"},
+    {day:"Sunday"}
 ]
