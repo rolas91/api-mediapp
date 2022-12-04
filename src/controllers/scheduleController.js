@@ -32,7 +32,7 @@ export const addUserSchedule = async(req, res, next) => {
 
 export const getDoctorScheduleByDay = async(req, res, next) => {
     try {
-        console.log(req.paramsday)
+        console.log(req.params.day)
         const schedule = await Schedule.findAll({
             where:{userId:req.userid}, 
             include:[
