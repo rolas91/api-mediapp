@@ -16,7 +16,7 @@ export const addUserSchedule = async(req, res, next) => {
                   attributes: ["health_code", "specialty_id", "bio"],
                 },
             ],
-            attributes: ["id"],
+            attributes: ["id","isDoctor"],
         });
         if(!result.isDoctor){
             return  res.status(200).json({code:"error", message:"unauthorized transaction"})
