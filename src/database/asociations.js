@@ -6,8 +6,8 @@ import Specialties from "./models/Specialties.js"
 import User from "./models/User.js"
 import UserMedicalData from "./models/UserMedicalData.js"
 import Shops from "./models/Shops.js"
-import Days from "./models/days.js"
-import Schedule from "./models/schedule.js"
+import Days from "./models/Days.js"
+import Schedule from "./models/Schedule.js"
 
 export default function () {
   User.hasOne(DoctorInfo, {
