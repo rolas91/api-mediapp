@@ -14,8 +14,9 @@ export const addUserSchedule = async(req, res, next) => {
                   model: DoctorInfo,
                   as: "isDoctor",
                   attributes: ["health_code", "specialty_id", "bio"],
-                }
-              ]
+                },
+            ],
+            attributes: ["id"],
         });
         if(!result.isDoctor){
             return  res.status(200).json({code:"error", message:"unauthorized transaction"})
