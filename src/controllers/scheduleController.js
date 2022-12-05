@@ -1,5 +1,6 @@
 import Schedule from '../database/models/Schedule.js'
 import User from '../database/models/User.js'
+import ScheduleHoursDoctor from '../database/models/ScheduleHoursDoctor.js'
 import DoctorInfo from "../database/models/DoctorInfo.js"
 import Days from '../database/models/Days.js'
 import Country from '../database/models/Country.js'
@@ -60,6 +61,10 @@ export const getDoctorScheduleByDay = async(req, res, next) => {
                     model:Days,
                     as:"day",
                     where:{day:req.params.day}
+                },
+                {
+                    model:ScheduleHoursDoctor,
+                    as:"hours"
                 }
             ]
         })
