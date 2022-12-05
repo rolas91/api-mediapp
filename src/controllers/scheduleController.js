@@ -63,8 +63,7 @@ export const getDoctorScheduleByDay = async(req, res, next) => {
                     where:{day:req.params.day}
                 },
                 {
-                    model:ScheduleHoursDoctor,
-                    as:"hours"
+                    model:ScheduleHoursDoctor
                 }
             ]
         })
