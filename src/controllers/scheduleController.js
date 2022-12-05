@@ -45,6 +45,15 @@ export const addUserSchedule = async(req, res, next) => {
             dayId:day.id,
             userId:user.id
         });
+
+        const hours = req.body.hours;
+
+        hours.forEach(async(hour) => {
+          await  ScheduleHoursDoctor.create({
+            hour,
+            scheduleId:newSchedule.id
+          })
+        })
        
         res.status(200).json({code:"success", data:newSchedule})
     } catch (error) {
