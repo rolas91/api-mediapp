@@ -5,6 +5,6 @@ import {addUserSchedule,getDoctorScheduleByDay} from '../controllers/scheduleCon
 
 export default function(){
     router.post("/schedule",validatedJWT,addUserSchedule)
-    router.get("/schedule/{day}",validatedJWT,getDoctorScheduleByDay)
+    router.get("/schedule/:day",validatedJWT,getDoctorScheduleByDay)
     return router;
 }

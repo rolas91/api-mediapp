@@ -16,17 +16,38 @@ export const addUserSchedule = async(req, res, next) => {
                   attributes: ["health_code", "specialty_id", "bio"],
                 },
             ],
-            attributes: ["id","isDoctor"],
+            attributes: ["id"],
         });
         if(!user.isDoctor){
-            return  res.status(200).json({code:"error", message:"unauthorized transaction"})
+            return  res.status(400).json({code:"error", message:"unauthorized transaction"})
         }
 
-        const day = await User.findOne({where:{}})
+        const day = await Days.findOne({where:{day:req.body.day}});
+
+        if(!day){
+            return  res.status(400).json({code:"error", message:"please add a day of week valid"})
+        }
+
+        const ifExistSchedule = await Schedule.findOne({
+            where:{
+                dayId:day.id,
+                userId:user.id
+            }
+        })
+        if(ifExistSchedule){
+            return  res.status(400).json({code:"error", message:"this day has already been registered"})
+        }
+
+        const newSchedule = await Schedule.create({
+            initial_schedule:req.body.initialSchedule,
+            end_schedule:req.body.endSchedule,
+            dayId:day.id,
+            userId:user.id
+        });
        
-        res.status(200).json({code:"success", data:result})
+        res.status(200).json({code:"success", data:newSchedule})
     } catch (error) {
-        console.log(error)
+        res.status(200).json({code:"error", error})
     }
 }
 
@@ -43,7 +64,6 @@ export const getDoctorScheduleByDay = async(req, res, next) => {
                 }
             ]
         })
-        console.log('respuesta',schedule)
         res.status(200).json({code:"success", schedule})
     } catch (error) {
         console.log(error)
