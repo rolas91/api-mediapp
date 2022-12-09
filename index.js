@@ -38,6 +38,7 @@ app.listen(process.env.PORT || 3000, () => {
     })
     .catch((error) => console.log(error))
     .finally(() => {
+      //relations tables
       asociations()
       setTimeout(() => {
         addSpecialties()
@@ -45,6 +46,6 @@ app.listen(process.env.PORT || 3000, () => {
         addShops()
         addProfileCode()
         addDays()
-      }, 10000)
+      }, 30000)
     })
 })

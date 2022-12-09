@@ -127,8 +127,11 @@ export const authenticateUser = async (req, res) => {
           attributes: ["health_code", "specialty_id", "bio"],
           include:[
             {
-              model:CvData,
-              as:"cv"
+              model:CvData, 
+              attributes: ["id", "name", "placeHolder","controlType","value","categoryCVId"],
+              include:[{
+                model:CategoryCV
+              }]             
             }
           ]
         },
