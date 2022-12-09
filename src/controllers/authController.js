@@ -4,9 +4,12 @@ import DoctorInfo from "../database/models/DoctorInfo.js"
 import City from "../database/models/City.js"
 import Country from "../database/models/Country.js"
 import Specialties from "../database/models/Specialties.js"
+import CategoryCV from '../database/models/Category_cv.js'
+import CvData from '../database/models/Cv_data.js'
 import { genSalt, hash, compare } from "bcrypt"
 import { generatedJWT } from "../helpers/jwt.js"
 import { PROFILE_DOCTOR, PROFILE_USER } from "../utils/constants.js"
+
 
 export const registerDoctor = async (req, res) => {
   try {
@@ -122,6 +125,12 @@ export const authenticateUser = async (req, res) => {
           model: DoctorInfo,
           as: "isDoctor",
           attributes: ["health_code", "specialty_id", "bio"],
+          include:[
+            {
+              model:CvData,
+              as:"cv"
+            }
+          ]
         },
         { model: Country, attributes: ["id", "country", "code"] },
         { model: City, as: "city", attributes: ["id", "city"] },
@@ -161,7 +170,6 @@ export const authenticateUser = async (req, res) => {
         }
       }
     }
-    // console.log("jaja", user)
     res.status(200).json({
       code: "success",
       user: Object.keys(user.dataValues)
