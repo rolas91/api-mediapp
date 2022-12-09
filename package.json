@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
+    "start": "NODE_OPTIONS='--experimental-specifier-resolution=node' node index.js",
     "start:dev": "nodemon index.js"
   },
   "keywords": [],
