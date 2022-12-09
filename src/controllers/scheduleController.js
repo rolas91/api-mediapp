@@ -22,7 +22,7 @@ export const addUserSchedule = async(req, res, next) => {
         if(!user.isDoctor){
             return  res.status(400).json({code:"error", message:"unauthorized transaction"})
         }
-
+        
         const day = await Days.findOne({where:{day:req.body.day}});
 
         if(!day){

@@ -9,6 +9,8 @@ import Shops from "./models/Shops.js"
 import Days from "./models/Days.js"
 import Schedule from "./models/Schedule.js"
 import ScheduleHoursDoctor from './models/ScheduleHoursDoctor.js'
+import CV_Data from './models/cv_data.js'
+import CategoryCV from './models/category_cv'
 
 export default function () {
   User.hasOne(DoctorInfo, {
@@ -32,4 +34,11 @@ export default function () {
 
   ScheduleHoursDoctor.belongsTo(Schedule, {foreignKey:"scheduleId", onDelete:"cascade"})
   Schedule.hasMany(ScheduleHoursDoctor, {foreignKey:"scheduleId"})
+
+  CV_Data.belongsTo(CategoryCV, {foreignKey:"categoryCVId", onDelete:"cascade"})
+  CategoryCV.hasMany(CV_Data, {foreignKey:"categoryCVId"})
+
+  CV_Data.belongsTo(DoctorInfo, {foreignKey:"doctorDataId", onDelete:"cascade"})
+  DoctorInfo.hasMany(CV_Data, {foreignKey:"doctorDataId"})
+  
 }
