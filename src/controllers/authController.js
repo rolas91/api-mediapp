@@ -4,8 +4,8 @@ import DoctorInfo from "../database/models/DoctorInfo.js"
 import City from "../database/models/City.js"
 import Country from "../database/models/Country.js"
 import Specialties from "../database/models/Specialties.js"
-import CategoryCV from '../database/models/Category_cv.js'
-import CvData from '../database/models/Cv_data.js'
+import CategoryCV from '../database/models/category_cv.js'
+import CvData from '../database/models/cv_data.js'
 import { genSalt, hash, compare } from "bcrypt"
 import { generatedJWT } from "../helpers/jwt.js"
 import { PROFILE_DOCTOR, PROFILE_USER } from "../utils/constants.js"
