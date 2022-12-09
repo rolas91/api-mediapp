@@ -10,7 +10,7 @@ import Days from "./models/Days.js"
 import Schedule from "./models/Schedule.js"
 import ScheduleHoursDoctor from './models/ScheduleHoursDoctor.js'
 import CV_Data from './models/cv_data.js'
-import CategoryCV from './models/category_cv'
+import CategoryCV from './models/category_cv.js'
 
 export default function () {
   User.hasOne(DoctorInfo, {
