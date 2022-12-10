@@ -28,35 +28,38 @@ export const saveDoctorProfile = async(req, res) => {
       ],
     })
 
-    const dataFields = {}
     
-    cv_data.forEach(async(item) => {
-      Cv_data.findOne({
-        id:item.id
-      }).then(async result => {   
-        if(result !== null){
-          const updated = await Cv_data.update({
-            name:item.name,
-            placeHolder:item.placeHolder,
-            controlType:item.controlType,
-            value:item.value,
-          },
-          {returnin:true},
-          {where:{id:result.id}}) 
-          dataFields  = {...updated}  
-        }else{
-          const categorycv = await Category_cv.findOne({where:{name:item.category_cv.name}});
-          const create = await Cv_data.create({
-            name:item.name,
-            placeHolder:item.placeHolder,
-            controlType:item.controlType,
-            value:item.value,
-            categoryCVId:categorycv.id,
-            doctorDataId:user.isDoctor.id
-          })
-          dataFields  = {...create}  
-        }
-      }).catch(error => console.log(error))
+    const result = new Promise(function(resolve, reject) {
+      const dataFields = {}
+      cv_data.forEach(async(item) => {
+        Cv_data.findOne({
+          id:item.id
+        }).then(async result => {   
+          if(result !== null){
+            const updated = await Cv_data.update({
+              name:item.name,
+              placeHolder:item.placeHolder,
+              controlType:item.controlType,
+              value:item.value,
+            },
+            {returning:true},
+            {where:{id:result.id}}) 
+            dataFields  = {...updated}              
+          }else{
+            const categorycv = await Category_cv.findOne({where:{name:item.category_cv.name}});
+            const create = await Cv_data.create({
+              name:item.name,
+              placeHolder:item.placeHolder,
+              controlType:item.controlType,
+              value:item.value,
+              categoryCVId:categorycv.id,
+              doctorDataId:user.isDoctor.id
+            })
+            dataFields  = {...create}  
+          }
+        }).catch(error => console.log(error))
+      })
+      resolve(dataFields)
     })
 
     if(user?.isDoctor){
@@ -77,7 +80,7 @@ export const saveDoctorProfile = async(req, res) => {
       }] 
     });
 
-    res.status(200).json({code:'success', fields:dataFields, message:'procesed correctly'})
+    res.status(200).json({code:'success', fields:result, message:'procesed correctly'})
   } catch (error) {
     res.status(500).json({code:'error', message:error})
   }
