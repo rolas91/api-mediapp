@@ -55,8 +55,7 @@ export const saveDoctorProfile = async(req, res) => {
         })
       })
     }
-
-    if(user.isDoctor.length > 0){
+    if(user?.isDoctor){
       await DoctorInfo.update(
         {
           health_code,
@@ -64,9 +63,8 @@ export const saveDoctorProfile = async(req, res) => {
           bio
         },
         {
-          where:{id:user.isDoctor.id
-        }
-      })
+          where:{id:user.isDoctor.id}
+        })
     }
     res.status(200).json({code:'success', message:'procesed correctly'})
   } catch (error) {
