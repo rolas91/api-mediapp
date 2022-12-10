@@ -60,7 +60,7 @@ export const addUserSchedule = async(req, res, next) => {
         res.status(200).json({code:"error", error})
     }
 }
-
+//seguir
 export const getDoctorScheduleByDay = async(req, res, next) => {
     try {
         const schedule = await Schedule.findAll({
