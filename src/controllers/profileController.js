@@ -28,22 +28,25 @@ export const saveDoctorProfile = async(req, res) => {
       ],
     })
 
+    const dataFields = {}
     
     cv_data.forEach(async(item) => {
       Cv_data.findOne({
         id:item.id
       }).then(async result => {   
         if(result !== null){
-          await Cv_data.update({
+          const updated = await Cv_data.update({
             name:item.name,
             placeHolder:item.placeHolder,
             controlType:item.controlType,
             value:item.value,
           },
-          {where:{id:result.id}})      
+          {returnin:true},
+          {where:{id:result.id}}) 
+          dataFields  = {...updated}  
         }else{
           const categorycv = await Category_cv.findOne({where:{name:item.category_cv.name}});
-          await Cv_data.create({
+          const create = await Cv_data.create({
             name:item.name,
             placeHolder:item.placeHolder,
             controlType:item.controlType,
@@ -51,6 +54,7 @@ export const saveDoctorProfile = async(req, res) => {
             categoryCVId:categorycv.id,
             doctorDataId:user.isDoctor.id
           })
+          dataFields  = {...create}  
         }
       }).catch(error => console.log(error))
     })
