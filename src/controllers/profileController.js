@@ -32,9 +32,7 @@ export const saveDoctorProfile = async(req, res) => {
     cv_data.forEach(async(item) => {
       Cv_data.findOne({
         id:item.id
-      }).then(async result => {
-        console.log('loco man1',item);
-        console.log('loco man2', result);
+      }).then(async result => {   
         if(result !== null){
           await Cv_data.update({
             name:item.name,
@@ -57,30 +55,6 @@ export const saveDoctorProfile = async(req, res) => {
       }).catch(error => console.log(error))
     })
 
-    // if(cv){
-    //   cv_data.forEach(async(item) => {
-    //     await Cv_data.update({
-    //       name:item.name,
-    //       placeHolder:item.placeHolder,
-    //       controlType:item.controlType,
-    //       value:item.value,
-    //     },
-    //     {where:{id:item.id}})
-    //   })
-    // }else{
-    //   cv_data.forEach(async(item) => {
-    //     const categorycv = await Category_cv.findOne({where:{name:item.category_cv.name}});
-    //     await Cv_data.create({
-    //       name:item.name,
-    //       placeHolder:item.placeHolder,
-    //       controlType:item.controlType,
-    //       value:item.value,
-    //       categoryCVId:categorycv.id,
-    //       doctorDataId:user.isDoctor.id
-    //     })
-    //   })
-    // }
-
     if(user?.isDoctor){
       await DoctorInfo.update(
         {
@@ -92,7 +66,9 @@ export const saveDoctorProfile = async(req, res) => {
           where:{id:user.isDoctor.id}
         })
     }
-    res.status(200).json({code:'success', message:'procesed correctly'})
+    const fields = await Cv_data.findAll({where:{doctorDataId:user.isDoctor.id}});
+
+    res.status(200).json({code:'success', fields, message:'procesed correctly'})
   } catch (error) {
     res.status(500).json({code:'error', message:error})
   }
