@@ -27,8 +27,8 @@ export const saveDoctorProfile = async(req, res) => {
         },
       ],
     })
-
-    
+    console.log('usuario', user.isDoctor);
+ 
     const result = new Promise((resolve, reject) => {
       const dataFields = {}
       cv_data.forEach(async(item) => {
