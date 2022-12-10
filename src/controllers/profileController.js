@@ -30,30 +30,31 @@ export const saveDoctorProfile = async(req, res) => {
 
     
     cv_data.forEach(async(item) => {
-      const cv = await Cv_data.findOne({
+      Cv_data.findOne({
         id:item.id
-      })
-      console.log('loco man', cv);
-      console.log('loco man',item);
-      if(cv !== null){
-        await Cv_data.update({
-          name:item.name,
-          placeHolder:item.placeHolder,
-          controlType:item.controlType,
-          value:item.value,
-        },
-        {where:{id:cv.id}})      
-      }else{
-        const categorycv = await Category_cv.findOne({where:{name:item.category_cv.name}});
-        await Cv_data.create({
-          name:item.name,
-          placeHolder:item.placeHolder,
-          controlType:item.controlType,
-          value:item.value,
-          categoryCVId:categorycv.id,
-          doctorDataId:user.isDoctor.id
-        })
-      }
+      }).then(async result => {
+        console.log('loco man1',item);
+        console.log('loco man2', result);
+        if(result !== null){
+          await Cv_data.update({
+            name:item.name,
+            placeHolder:item.placeHolder,
+            controlType:item.controlType,
+            value:item.value,
+          },
+          {where:{id:result.id}})      
+        }else{
+          const categorycv = await Category_cv.findOne({where:{name:item.category_cv.name}});
+          await Cv_data.create({
+            name:item.name,
+            placeHolder:item.placeHolder,
+            controlType:item.controlType,
+            value:item.value,
+            categoryCVId:categorycv.id,
+            doctorDataId:user.isDoctor.id
+          })
+        }
+      }).catch(error => console.log(error))
     })
 
     // if(cv){
