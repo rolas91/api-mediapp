@@ -33,7 +33,7 @@ export const saveDoctorProfile = async(req, res) => {
       const cv = await Cv_data.findOne({
         id:item.id
       })
-      console.log('loco man',cv,cv?.id);
+      console.log('loco man',item);
       if(cv !== null){
         await Cv_data.update({
           name:item.name,
