@@ -29,7 +29,7 @@ export const saveDoctorProfile = async(req, res) => {
     })
 
     
-    const result = new Promise(function(resolve, reject) {
+    const result = new Promise((resolve, reject) => {
       const dataFields = {}
       cv_data.forEach(async(item) => {
         Cv_data.findOne({
