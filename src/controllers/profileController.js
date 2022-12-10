@@ -52,8 +52,8 @@ export const saveDoctorProfile = async(req, res) => {
         }
       })
     }
-
+    res.status(200).json({code:'success', message:'procesed correctly'})
   } catch (error) {
-    console.log(error);
+    res.status(500).json({code:'error', message:error})
   }
 }
