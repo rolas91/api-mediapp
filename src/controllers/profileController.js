@@ -44,7 +44,7 @@ export const saveDoctorProfile = async(req, res) => {
       })
     }else{
       cv_data.forEach(async(item) => {
-        const categorycv = await Category_cv.findOne({where:{name:item.name}});
+        const categorycv = await Category_cv.findOne({where:{name:item.category_cv.name}});
         await Cv_data.create({
           name:item.name,
           placeHolder:item.placeHolder,
