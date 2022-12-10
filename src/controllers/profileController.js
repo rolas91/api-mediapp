@@ -34,15 +34,13 @@ export const saveDoctorProfile = async(req, res) => {
         id:item.id
       })
       if(cv){
-        cv_data.forEach(async(item) => {
-          await Cv_data.update({
-            name:item.name,
-            placeHolder:item.placeHolder,
-            controlType:item.controlType,
-            value:item.value,
-          },
-          {where:{id:cv.id}})
-        })        
+        await Cv_data.update({
+          name:item.name,
+          placeHolder:item.placeHolder,
+          controlType:item.controlType,
+          value:item.value,
+        },
+        {where:{id:cv.id}})      
       }else{
         const categorycv = await Category_cv.findOne({where:{name:item.category_cv.name}});
         await Cv_data.create({
