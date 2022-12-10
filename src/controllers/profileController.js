@@ -66,7 +66,12 @@ export const saveDoctorProfile = async(req, res) => {
           where:{id:user.isDoctor.id}
         })
     }
-    const fields = await Cv_data.findAll({where:{doctorDataId:user.isDoctor.id}});
+    const fields = await Cv_data.findAll({
+      where:{doctorDataId:user.isDoctor.id},
+      include:[{
+        model:Category_cv
+      }] 
+    });
 
     res.status(200).json({code:'success', fields, message:'procesed correctly'})
   } catch (error) {
