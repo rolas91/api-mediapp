@@ -28,17 +28,33 @@ export const saveDoctorProfile = async(req, res) => {
       ],
     })
 
-    cv_data.forEach(async(item) => {
-      const categorycv = await Category_cv.findOne({where:{name:item.name}});
-      await Cv_data.create({
-        name:item.name,
-        placeHolder:item.placeHolder,
-        controlType:item.controlType,
-        value:item.value,
-        categoryCVId:categorycv.id,
-        doctorDataId:user.isDoctor.id
-      })
+    const cv = await Cv_data.findOne({
+      doctorDataId:user.isDoctor.id
     })
+    
+    if(cv){
+      cv_data.forEach(async(item) => {
+        await Cv_data.update({
+          name:item.name,
+          placeHolder:item.placeHolder,
+          controlType:item.controlType,
+          value:item.value,
+        },
+        {where:{id:item.id}})
+      })
+    }else{
+      cv_data.forEach(async(item) => {
+        const categorycv = await Category_cv.findOne({where:{name:item.name}});
+        await Cv_data.create({
+          name:item.name,
+          placeHolder:item.placeHolder,
+          controlType:item.controlType,
+          value:item.value,
+          categoryCVId:categorycv.id,
+          doctorDataId:user.isDoctor.id
+        })
+      })
+    }
 
     if(user.isDoctor.length > 0){
       await DoctorInfo.update(
