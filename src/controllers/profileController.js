@@ -42,7 +42,6 @@ export const saveDoctorProfile = async(req, res) => {
               controlType:item.controlType,
               value:item.value,
             },
-            {returning:true},
             {where:{id:result.id}}) 
             dataFields  = {...updated}              
           }else{
