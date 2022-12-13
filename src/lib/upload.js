@@ -1,5 +1,4 @@
 import multer from 'multer';
-import {} from ''
 const DIR = '../../public/'
 
 const storage = multer.diskStorage({
