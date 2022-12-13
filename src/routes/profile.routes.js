@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import { validatedJWT } from "../middlewares/jwt-validator.js"
-import {upload} from '../lib/upload'
+import {upload} from '../lib/upload.js'
 
 
 import { getProfiles,saveDoctorProfile } from "../controllers/profileController.js";
