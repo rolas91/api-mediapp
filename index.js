@@ -22,7 +22,7 @@ const __dirname = path.dirname(__filename)
 //middleware
 app.use(cors({ origin: "*", credentials: true }))
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use("/static", express.static(path.join(__dirname, "/public")))
 
 for (let i in routes) {
@@ -49,3 +49,16 @@ app.listen(process.env.PORT || 3000, () => {
       }, 30000)
     })
 })
+
+app.use((req, res, next) => {
+  // Error goes via `next()` method
+  setImmediate(() => {
+      next(new Error('Something went wrong'));
+  });
+});
+
+app.use(function (err, req, res, next) {
+  console.error(err.message);
+  if (!err.statusCode) err.statusCode = 500;
+  res.status(err.statusCode).send(err.message);
+});

@@ -15,10 +15,18 @@ export const getProfiles = async (req, res, next) => {
   }
 }
 
+export const uploadImage = (req, res, next) => {
+  try {
+    const url = req.protocol + '://' + req.get('host')
+    res.status(200).json({code:'success',url:url + '/public/' + req.file.filename})
+  } catch (error) {
+    console.log('error', error);
+  }
+}
+
 export const saveDoctorProfile = async(req, res) => {
   try {
-    const {bio, cv_data,specialties,health_code } = req.body;
-    const url = req.protocol + '://' + req.get('host')
+    const {bio, cv_data,specialties,health_code, urlImage } = req.body;
     const user = await  User.findOne({
       where: { id: req.userid },
       include: [
@@ -30,7 +38,7 @@ export const saveDoctorProfile = async(req, res) => {
     })
 
     await User.update({
-      picture:`${url}/public/${req.file.filename}`
+      picture: urlImage
     },{where:{id:user.id}})
  
     const result =  await new Promise(async(resolve, reject) => {
