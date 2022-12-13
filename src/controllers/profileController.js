@@ -3,7 +3,7 @@ import Cv_data from "../database/models/cv_data.js"
 import Category_cv from "../database/models/category_cv.js"
 import User from "../database/models/User.js"
 import DoctorInfo from "../database/models/DoctorInfo.js"
-import {cloudDynari} from '../lib/clouddinary.js'
+import {v2 as cloudinary} from 'cloudinary'
 
 
 export const getProfiles = async (req, res, next) => {
@@ -17,7 +17,7 @@ export const getProfiles = async (req, res, next) => {
 }
 
 export const uploadImage = async(req, res, next) => {
-  cloudDynari.uploader.upload(req.file.path).then(result => {
+  cloudinary.v2.uploader.upload(req.file.path).then(result => {
     console.log(result);
     res.status(200).json({code:'success',cloudImage:{
       profile_img: result.secure_url,
