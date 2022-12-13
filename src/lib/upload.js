@@ -1,5 +1,6 @@
 import multer from 'multer';
 import {v2 as cloudinary} from 'cloudinary'
+import {cloudinaryStorage} from 'multer-storage-cloudinary'
 import uui from '../utils/uui.js';
 import { fileURLToPath } from 'url';
 import path, { dirname } from "path"
