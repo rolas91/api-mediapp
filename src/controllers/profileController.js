@@ -17,16 +17,13 @@ export const getProfiles = async (req, res, next) => {
 }
 
 export const uploadImage = async(req, res, next) => {
-  try {
-    const result = await cloudinary.v2.uploader.upload(req.file.path);
+  cloudinary.uploader.upload(req.file.path).then(result => {
     console.log(result);
     res.status(200).json({code:'success',cloudImage:{
       profile_img: result.secure_url,
       cloudinary_id: result.public_id,
     }})
-  } catch (error) {
-    console.log('error', error);
-  }
+  }).catch(error => res.status(200).json({code:'error',error}))
 }
 
 export const saveDoctorProfile = async(req, res) => {
