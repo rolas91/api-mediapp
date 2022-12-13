@@ -3,6 +3,7 @@ import Cv_data from "../database/models/cv_data.js"
 import Category_cv from "../database/models/category_cv.js"
 import User from "../database/models/User.js"
 import DoctorInfo from "../database/models/DoctorInfo.js"
+import cloudinary from '../lib/clouddinary.js'
 
 
 export const getProfiles = async (req, res, next) => {
@@ -15,10 +16,14 @@ export const getProfiles = async (req, res, next) => {
   }
 }
 
-export const uploadImage = (req, res, next) => {
+export const uploadImage = async(req, res, next) => {
   try {
-    const url = req.protocol + '://' + req.get('host')
-    res.status(200).json({code:'success',url:`https://mediapp.up.railway.app/static/images/${req.file.filename}`})
+    const result = await cloudinary.uploader.upload(req.file.path);
+    
+    res.status(200).json({code:'success',cloudImage:{
+      profile_img: result.secure_url,
+      cloudinary_id: result.public_id,
+    }})
   } catch (error) {
     console.log('error', error);
   }
