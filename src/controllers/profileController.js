@@ -18,6 +18,7 @@ export const getProfiles = async (req, res, next) => {
 export const saveDoctorProfile = async(req, res) => {
   try {
     const {bio, cv_data,specialties,health_code } = req.body;
+    const url = req.protocol + '://' + req.get('host')
     const user = await  User.findOne({
       where: { id: req.userid },
       include: [
@@ -27,13 +28,16 @@ export const saveDoctorProfile = async(req, res) => {
         },
       ],
     })
-    console.log('usuario', user.isDoctor);
+
+    await User.update({
+      picture:`${url}/public/${req.file.filename}`
+    },{where:{id:user.id}})
  
-    const result = new Promise((resolve, reject) => {
-      const dataFields = {}
-      cv_data.forEach(async(item) => {
+    const result =  await new Promise(async(resolve, reject) => {
+      let fieldsData = []
+      cv_data.forEach(item => {
         Cv_data.findOne({
-          id:item.id
+          where:{id:item.id}
         }).then(async result => {   
           if(result !== null){
             const updated = await Cv_data.update({
@@ -42,8 +46,21 @@ export const saveDoctorProfile = async(req, res) => {
               controlType:item.controlType,
               value:item.value,
             },
-            {where:{id:result.id}}) 
-            dataFields  = {...updated}              
+            {where:{id:result.id}})  
+            console.log('al actualizar',updated);
+
+            if(updated){
+              console.log('se actualizo');
+              Cv_data.findAll({
+                where:{doctorDataId:user.isDoctor.id},
+                include:[{
+                  model:Category_cv
+                }] 
+              }).then(result => {
+                console.log(result);
+                fieldsData.push(result)
+              }).catch(error => console.log(error));   
+            }
           }else{
             const categorycv = await Category_cv.findOne({where:{name:item.category_cv.name}});
             const create = await Cv_data.create({
@@ -53,12 +70,24 @@ export const saveDoctorProfile = async(req, res) => {
               value:item.value,
               categoryCVId:categorycv.id,
               doctorDataId:user.isDoctor.id
-            })
-            dataFields  = {...create}  
+            })  
+            console.log('al crear',create);
+            if(create){
+              console.log('se creo');
+              Cv_data.findAll({
+                where:{doctorDataId:user.isDoctor.id},
+                include:[{
+                  model:Category_cv
+                }] 
+              }).then(result => {
+                console.log(result);
+                fieldsData.push(result)
+              }).catch(error => console.log(error));   
+            }
           }
         }).catch(error => console.log(error))
-      })
-      resolve(dataFields)
+      }) 
+      resolve(fieldsData)                
     })
 
     if(user?.isDoctor){
@@ -72,13 +101,7 @@ export const saveDoctorProfile = async(req, res) => {
           where:{id:user.isDoctor.id}
         })
     }
-    const fields = await Cv_data.findAll({
-      where:{doctorDataId:user.isDoctor.id},
-      include:[{
-        model:Category_cv
-      }] 
-    });
-
+    
     res.status(200).json({code:'success', fields:result, message:'procesed correctly'})
   } catch (error) {
     res.status(500).json({code:'error', message:error})
