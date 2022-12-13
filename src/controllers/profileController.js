@@ -38,7 +38,7 @@ export const saveDoctorProfile = async(req, res) => {
     })
 
     await User.update({
-      picture: urlImage
+      picture:`/public/${urlImage.file.filename}`
     },{where:{id:user.id}})
  
     const result =  await new Promise(async(resolve, reject) => {
