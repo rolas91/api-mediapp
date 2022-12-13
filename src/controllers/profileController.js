@@ -18,7 +18,7 @@ export const getProfiles = async (req, res, next) => {
 export const uploadImage = (req, res, next) => {
   try {
     const url = req.protocol + '://' + req.get('host')
-    res.status(200).json({code:'success',url:url + '/public/' + req.file.filename})
+    res.status(200).json({code:'success',url:`https://mediapp.up.railway.app/static/images/${req.file.filename}`})
   } catch (error) {
     console.log('error', error);
   }
