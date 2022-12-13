@@ -18,8 +18,8 @@ export const getProfiles = async (req, res, next) => {
 
 export const uploadImage = async(req, res, next) => {
   try {
-    const result = await cloudinary.uploader.upload(req.file.path);
-    
+    const result = await cloudinary.v2.uploader.upload(req.file.path);
+    console.log(result);
     res.status(200).json({code:'success',cloudImage:{
       profile_img: result.secure_url,
       cloudinary_id: result.public_id,
