@@ -23,7 +23,7 @@ const __dirname = path.dirname(__filename)
 //middleware
 app.use(cors({ origin: "*", credentials: true }))
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(fileUpload({
   useTempFiles : true,
   tempFileDir : './uploads'
