@@ -16,8 +16,16 @@ export const getProfiles = async (req, res, next) => {
 }
 
 export const saveImage = async(req, res, next) => {  
-  const result = await uploadImage(req.files.image.tempFilePath)
-  res.status(200).json({code:'success', image:result})
+  try {
+    if(req?.files?.image){
+      const result = await uploadImage(req.files.image.tempFilePath)
+      res.status(200).json({code:'success', image:result})
+    }else{
+      res.status(200).json({code:'error', message:'please provided image'})      
+    }
+  } catch (error) {
+    res.status(200).json({code:'error', message:error})          
+  }
 }
 
 export const saveDoctorProfile = async(req, res) => {
