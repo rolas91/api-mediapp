@@ -17,6 +17,7 @@ export const getProfiles = async (req, res, next) => {
 
 export const saveImage = async(req, res, next) => {  
   try {
+    console.log(req?.files);
     if(req?.files?.image){
       const result = await uploadImage(req.files.image.tempFilePath)
       res.status(200).json({code:'success', image:result})
