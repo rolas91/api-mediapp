@@ -24,6 +24,7 @@ export const registerDoctor = async (req, res) => {
       specialty_id = "",
       country_id = "",
       city_id = "",
+      picture=""
     } = req.body
     const name = `${names.split(" ", 4)[0]} ${names.split(" ", 4)[1]}`
     const lastname = `${names.split(" ", 4)[2]} ${names.split(" ", 4)[3]}`
@@ -45,6 +46,7 @@ export const registerDoctor = async (req, res) => {
       id_number,
       countryId: country_id,
       cityId: city_id,
+      picture
     })
     await DoctorInfo.create({
       health_code: health_code,
