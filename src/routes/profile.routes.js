@@ -7,6 +7,6 @@ import { getProfiles,saveDoctorProfile, saveImage } from "../controllers/profile
 export default function () {
   router.get("/profile", getProfiles);
   router.post("/profile",validatedJWT,saveDoctorProfile);
-  router.post("/profile-upload-image",validatedJWT, saveImage )
+  router.post("/profile-upload-image", saveImage )
   return router;
 }
