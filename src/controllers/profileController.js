@@ -3,8 +3,7 @@ import Cv_data from "../database/models/cv_data.js"
 import Category_cv from "../database/models/category_cv.js"
 import User from "../database/models/User.js"
 import DoctorInfo from "../database/models/DoctorInfo.js"
-import {v2 as cloudinary} from 'cloudinary'
-
+import {uploadImage} from '../utils/cloudinary.js'
 
 export const getProfiles = async (req, res, next) => {
   try {
@@ -16,14 +15,9 @@ export const getProfiles = async (req, res, next) => {
   }
 }
 
-export const uploadImage = async(req, res, next) => {
-  cloudinary.v2.uploader.upload(req.file.path).then(result => {
-    console.log(result);
-    res.status(200).json({code:'success',cloudImage:{
-      profile_img: result.secure_url,
-      cloudinary_id: result.public_id,
-    }})
-  }).catch(error => res.status(200).json({code:'error',error}))
+export const saveImage = async(req, res, next) => {  
+  const result = await uploadImage(req.files.image.tempFilePath)
+  res.status(200).json({code:'success', image:result})
 }
 
 export const saveDoctorProfile = async(req, res) => {

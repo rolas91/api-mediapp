@@ -1,4 +1,5 @@
 import express from "express"
+import fileUpload from 'express-fileupload'
 import path from "path"
 import { fileURLToPath } from "url"
 import "dotenv/config"
@@ -23,6 +24,10 @@ const __dirname = path.dirname(__filename)
 app.use(cors({ origin: "*", credentials: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(fileUpload({
+  useTempFiles : true,
+  tempFileDir : './uploads'
+}));
 app.use("/static", express.static(path.join(__dirname, "/public")))
 
 for (let i in routes) {
