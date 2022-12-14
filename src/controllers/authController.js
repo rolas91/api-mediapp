@@ -74,6 +74,7 @@ export const registerUser = async (req, res) => {
     age = "",
     country_id = "",
     city_id = "",
+    picture = ""
   } = req.body
 
   const name = `${names.split(" ", 4)[0]} ${names.split(" ", 4)[1]}`
@@ -98,6 +99,7 @@ export const registerUser = async (req, res) => {
       id_number,
       countryId: country_id,
       cityId: city_id,
+      picture
     })
     await UserMedicalData.create({
       blood_type,
