@@ -6,5 +6,6 @@ import country from "./country.routes.js";
 import city from "./city.routes.js";
 import profile from "./profile.routes.js";
 import schedule from "./schedule.routes.js";
+import user from "./user.routes.js"
 
-export default { auth, specialties, shops, doctor, country, city, profile, schedule };
+export default { auth, specialties, shops, doctor, country, city, profile, schedule, user};
